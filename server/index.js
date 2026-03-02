@@ -42,7 +42,7 @@ app.post('/api/generate-emails', async (req, res) => {
     const query = `query ExecuteWorkflow($workflowId: String! $Qty: String $FirstName: String $LastName: String $Email: String $Title: String $Role: String $CompanyName: String $CompanyDomain: String $Industry: String $LinkedInProfile: String $DiscAnalysis: String) { executeWorkflow(workflowId: $workflowId payload: {Qty: $Qty FirstName: $FirstName LastName: $LastName Email: $Email Title: $Title Role: $Role CompanyName: $CompanyName CompanyDomain: $CompanyDomain Industry: $Industry LinkedInProfile: $LinkedInProfile DiscAnalysis: $DiscAnalysis}) { status result } }`
 
     const variables = {
-      workflowId: "29897670-6e44-46a4-be97-ec7d133c71a5",
+      workflowId: process.env.LAMATIC_WORKFLOW_ID || "29897670-6e44-46a4-be97-ec7d133c71a5",
       Qty: Qty || "",
       FirstName: FirstName || "",
       LastName: LastName || "",

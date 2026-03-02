@@ -1,301 +1,160 @@
 # TRAQ.ai Email Generator
 
-A professional AI-powered email generation platform that creates personalized sales emails for prospects using advanced AI analysis. The application enriches prospect data from multiple sources (LinkedIn, company websites) and generates 6 unique email variants tailored to each prospect's personality profile and business context.
+AI-powered platform that generates 6 personalized sales email variants for each prospect using advanced personality profiling and multi-source data enrichment.
 
 ## Features
 
-- **CSV Upload**: Upload prospect lists via CSV files with drag-and-drop support
-- **Multi-Source Enrichment**: Automatically enriches prospect data from:
-  - LinkedIn profiles
-  - Company websites
-  - Public business data
-- **AI Persona Analysis**: Uses DISC personality profiling to tailor messaging
-- **6 Unique Email Variants**: Generates diverse approaches for each prospect:
-  - Competitor Intelligence
-  - Industry Statistics
-  - Methodology-focused
-  - DISC-tailored
-  - Tool Gap analysis
-  - Scale & Value proposition
-- **Real-time Pipeline Visualization**: Beautiful animated flow showing the AI processing pipeline
-- **Responsive Design**: Modern, professional UI with glassmorphism effects
-- **Batch Processing**: Process multiple prospects in a single session
+- **CSV Upload**: Upload prospect lists with drag-and-drop
+- **AI Enrichment**: Automatic data enrichment from LinkedIn and company websites
+- **DISC Profiling**: Personality-based email personalization
+- **6 Email Variants**: Diverse approaches per prospect (Competitor Intel, Industry Stats, Methodology, DISC-tailored, Tool Gap, Scale & Value)
+- **Real-time Visualization**: Beautiful animated pipeline showing AI processing stages
+- **Professional UI**: Modern design with glassmorphism effects
 
-## Technology Stack
+## Quick Start
 
-### Frontend
-- **React 18** - Modern UI library
-- **Vite** - Lightning-fast build tool and dev server
-- **CSS3** - Custom styling with animations and glassmorphism
-- **Axios** - HTTP client for API calls
-- **PapaParse** - CSV parsing library
+### Prerequisites
+- Node.js (v16+)
+- npm (v8+)
+- Lamatic API key
 
-### Backend
-- **Node.js** - Runtime environment
-- **Express** - Web application framework
-- **Lamatic API** - AI workflow orchestration
-- **CORS** - Cross-origin resource sharing
-- **dotenv** - Environment variable management
-
-## Prerequisites
-
-- Node.js (v16 or higher)
-- npm (v8 or higher)
-- Lamatic API key ([Get one here](https://lamatic.ai))
-
-## Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/traq-email-generator.git
-   cd traq-email-generator
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment variables**
-   
-   Copy the `.env.example` file to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit the `.env` file and add your Lamatic API key:
-   ```env
-   LAMATIC_API_KEY=your_lamatic_api_key_here
-   PORT=3001
-   ```
-
-## Usage
-
-### Development Mode
-
-Run both frontend and backend in development:
+### Installation
 
 ```bash
-# Terminal 1 - Start the backend server
+# Clone the repository
+git clone https://github.com/lamatic-apps/Traq-Email-Generation-.git
+cd Traq-Email-Generation-
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env and add your LAMATIC_API_KEY
+```
+
+### Run the Application
+
+```bash
+# Terminal 1 - Start backend
 npm run server
 
-# Terminal 2 - Start the Vite dev server
+# Terminal 2 - Start frontend
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173` (frontend) and the API at `http://localhost:3001` (backend).
+Visit `http://localhost:5173` to access the application.
 
-### Production Build
+## Environment Variables
 
-Build the frontend for production:
+Create a `.env` file with:
 
-```bash
-npm run build
+```env
+LAMATIC_API_KEY=your_api_key_here
+LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+PORT=3001
 ```
 
-Preview the production build:
+## CSV Format
 
-```bash
-npm run preview
-```
+Your CSV file should include:
 
-### Uploading Prospects
+| Column | Required | Description |
+|--------|----------|-------------|
+| First Name | Yes | Prospect's first name |
+| Last Name | Yes | Prospect's last name |
+| Email | Yes | Contact email |
+| Title | Yes | Job title |
+| Company Name | Yes | Company name |
+| Industry | No | Industry sector |
+| LinkedIn Profile | No | LinkedIn URL |
+| Company Domain | No | Company website |
 
-1. Prepare a CSV file with the following required columns:
-   - `First Name` or `FirstName`
-   - `Last Name` or `LastName`
-   - `Email`
-   - `Title`
-   - `Company Name` or `CompanyName` or `company`
-   - `Company Domain` or `CompanyDomain` (optional)
-   - `LinkedIn Profile` (optional)
-   - `Industry` (optional)
-
-2. Upload the CSV file using the drag-and-drop interface or file picker
-
-3. Preview your data in the table
-
-4. Click "Generate Personalized Emails" to start processing
-
-5. Watch the real-time pipeline visualization as the AI:
-   - Normalizes prospect data
-   - Enriches from LinkedIn and websites
-   - Analyzes personality profiles
-   - Generates 6 unique email variants per prospect
-
-6. View and copy your generated emails
-
-## CSV Format Example
-
+**Example:**
 ```csv
 First Name,Last Name,Email,Title,Company Name,Industry
-Hannah,Sackett,hannah.sackett@neocol.com,Senior Director Sales Performance,Neocol,Technology and business services
+Hannah,Sackett,hannah.sackett@neocol.com,Senior Director,Neocol,Technology
 ```
 
-## API Endpoints
+## How It Works
 
-### POST `/api/generate-emails`
+1. **Upload CSV** - Drag and drop your prospect list
+2. **Data Preview** - Review the data in a clean table
+3. **Generate Emails** - Click to start AI processing
+4. **Watch Pipeline** - Real-time visualization of:
+   - Data normalization
+   - Parallel enrichment (LinkedIn + Web)
+   - AI persona analysis
+   - 6 email generation streams
+   - Results finalization
+5. **View & Copy** - Browse generated emails and copy to clipboard
 
-Generates personalized emails for prospects from CSV data.
+## Tech Stack
 
-**Request**: JSON
-```json
-{
-  "csvData": [
-    {
-      "First Name": "Hannah",
-      "Last Name": "Sackett",
-      "Email": "hannah.sackett@neocol.com",
-      "Title": "Senior Director",
-      "Company Name": "Neocol"
-    }
-  ]
-}
-```
-
-**Response**:
-```json
-{
-  "success": true,
-  "results": [
-    {
-      "success": true,
-      "profile": {
-        "first_name": "Hannah",
-        "last_name": "Sackett",
-        "prospect_email": "hannah.sackett@neocol.com",
-        "title": "Senior Director",
-        "company": "Neocol",
-        "industry": "Technology",
-        "disc_profile": "C",
-        "persona": "Data-driven sales leader..."
-      },
-      "emails": [
-        {
-          "variant": 1,
-          "approach": "Competitor Intel",
-          "subject": "...",
-          "body": "..."
-        }
-      ]
-    }
-  ]
-}
-```
-
-### GET `/api/health`
-
-Health check endpoint.
-
-**Response**:
-```json
-{
-  "status": "ok",
-  "timestamp": "2024-02-27T12:00:00.000Z"
-}
-```
+- **Frontend**: React 18 + Vite
+- **Backend**: Node.js + Express
+- **AI Engine**: Lamatic API
+- **Styling**: Custom CSS with animations
 
 ## Project Structure
 
 ```
-traq-email-generator/
 ├── src/
-│   ├── components/
-│   │   ├── Header.jsx              # App header with logo
-│   │   ├── Header.css
-│   │   ├── FileUpload.jsx          # CSV upload component
-│   │   ├── FileUpload.css
-│   │   ├── DataPreview.jsx         # Prospect data table
-│   │   ├── DataPreview.css
-│   │   ├── FlowVisualization.jsx   # AI pipeline animation
-│   │   ├── FlowVisualization.css
-│   │   ├── EmailDisplay.jsx        # Generated emails viewer
-│   │   ├── EmailDisplay.css
-│   │   ├── Toast.jsx               # Notification system
-│   │   ├── Toast.css
-│   │   ├── Footer.jsx              # App footer
-│   │   └── Footer.css
-│   ├── App.jsx                     # Main application component
-│   ├── App.css                     # Global app styles
-│   ├── index.css                   # CSS variables and reset
-│   └── main.jsx                    # React entry point
+│   ├── components/     # React components
+│   ├── App.jsx        # Main app
+│   └── main.jsx       # Entry point
 ├── server/
-│   └── index.js                    # Express API server
-├── public/
-│   └── lamatic-logo.jpeg           # Company logo
-├── package.json                    # Dependencies and scripts
-├── vite.config.js                  # Vite configuration
-├── .env.example                    # Environment template
-├── .gitignore                      # Git ignore rules
-└── README.md                       # This file
+│   └── index.js       # Express API
+├── public/            # Static assets
+└── package.json       # Dependencies
 ```
 
-## Features in Detail
+## API Endpoint
 
-### AI Pipeline Stages
+### POST `/api/generate-emails`
 
-1. **Normalize Prospect Data**: Cleans and standardizes input data
-2. **Parallel Enrichment**: Simultaneously fetches data from LinkedIn and company websites
-3. **AI Persona Analysis**: Analyzes personality (DISC profile) and builds communication strategy
-4. **6 Email Generators**: Creates diverse email approaches in parallel
-5. **Finalize Results**: Merges and formats all email variants
+Generates personalized emails for a single prospect.
 
-### Email Variants
+**Request Body:**
+```json
+{
+  "FirstName": "Hannah",
+  "LastName": "Sackett",
+  "Email": "hannah.sackett@neocol.com",
+  "Title": "Senior Director",
+  "CompanyName": "Neocol",
+  "Industry": "Technology"
+}
+```
 
-1. **Competitor Intel**: Focuses on competitive advantages
-2. **Industry Stat**: Leverages industry trends and statistics
-3. **Methodology**: Emphasizes your unique approach and process
-4. **DISC Tailored**: Personalized based on prospect's personality profile
-5. **Tool Gap**: Addresses specific pain points and gaps
-6. **Scale & Value**: Highlights scalability and value proposition
+**Response:**
+```json
+{
+  "success": true,
+  "profile": { ... },
+  "emails": [
+    {
+      "variant": 1,
+      "approach": "Competitor Intel",
+      "subject": "...",
+      "body": "..."
+    }
+  ]
+}
+```
 
-## Environment Variables
+## Build for Production
 
-| Variable | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `LAMATIC_API_KEY` | Your Lamatic API authentication key | Yes | - |
-| `PORT` | Backend server port | No | 3001 |
+```bash
+npm run build
+npm run preview
+```
 
-## Error Handling
+## Security
 
-The application handles various error scenarios:
-- Invalid CSV format
-- Missing required columns
-- API connection failures
-- Rate limiting
-- Invalid prospect data
-- Network timeouts
-
-All errors are displayed with user-friendly messages and suggestions for resolution.
-
-## Security Notes
-
-- **Never commit your `.env` file** - It contains sensitive API keys
-- The `.env.example` is safe to commit (contains no real keys)
-- API keys are only stored server-side
-- All API calls are proxied through the backend to hide credentials
-
-## Performance
-
-- Processes prospects in real-time with visual feedback
-- Batch API calls for efficiency
-- Responsive UI during processing
-- Optimized bundle size with Vite
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- API keys stored in `.env` (gitignored)
+- No credentials in source code
+- CORS enabled for secure API calls
 
 ## License
 
@@ -303,17 +162,8 @@ ISC
 
 ## Support
 
-For issues or questions:
-- Open an issue on GitHub
-- Contact: support@traq.ai
-- Documentation: [https://docs.traq.ai](https://docs.traq.ai)
-
-## Acknowledgments
-
-- Built with [Lamatic.ai](https://lamatic.ai) - AI workflow orchestration platform
-- UI inspired by modern glassmorphism design trends
-- Icons and emojis for enhanced UX
+For issues or questions, open an issue on GitHub.
 
 ---
 
-**Built with ❤️ for sales teams everywhere**
+**Built with [Lamatic.ai](https://lamatic.ai)**
