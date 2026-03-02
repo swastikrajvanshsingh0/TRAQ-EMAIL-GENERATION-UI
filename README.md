@@ -51,9 +51,19 @@ Create a `.env` file with:
 
 ```env
 LAMATIC_API_KEY=your_api_key_here
+LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
 LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
 PORT=3001
 ```
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `LAMATIC_API_KEY` | Your Lamatic API authentication key | Yes |
+| `LAMATIC_API_URL` | Lamatic GraphQL endpoint URL | Yes |
+| `LAMATIC_WORKFLOW_ID` | Workflow identifier for email generation | Yes |
+| `LAMATIC_PROJECT_ID` | Project identifier | Yes |
+| `PORT` | Backend server port | No (default: 3001) |
 
 ## CSV Format
 

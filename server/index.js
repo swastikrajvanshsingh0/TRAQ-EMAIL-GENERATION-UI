@@ -59,12 +59,15 @@ app.post('/api/generate-emails', async (req, res) => {
     console.log('🔑 Using API Key (first 20 chars):', apiKey.substring(0, 20) + '...')
     console.log('🌐 Calling Lamatic API...')
 
-    const response = await fetch('https://sandbox566-flowforcontent246.lamatic.dev/graphql', {
+    const apiUrl = process.env.LAMATIC_API_URL || 'https://sandbox566-flowforcontent246.lamatic.dev/graphql'
+    const projectId = process.env.LAMATIC_PROJECT_ID || '5ff16d78-7137-45b7-a320-a9e1f4c8d4bd'
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'x-project-id': '5ff16d78-7137-45b7-a320-a9e1f4c8d4bd'
+        'x-project-id': projectId
       },
       body: JSON.stringify({
         query,
