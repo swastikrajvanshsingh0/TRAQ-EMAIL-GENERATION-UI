@@ -36,34 +36,31 @@ cp .env.example .env
 ### Run the Application
 
 ```bash
-# Terminal 1 - Start backend
-npm run server
-
-# Terminal 2 - Start frontend
+# Start frontend (calls Lamatic API directly)
 npm run dev
 ```
 
-Visit `http://localhost:5173` to access the application.
+Visit `http://localhost:5173` (or the port shown) to access the application.
 
 ## Environment Variables
 
 Create a `.env` file with:
 
 ```env
-LAMATIC_API_KEY=your_api_key_here
-LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
-LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
-LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
-PORT=3001
+VITE_LAMATIC_API_KEY=your_api_key_here
+VITE_LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
+VITE_LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+VITE_LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
 ```
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `LAMATIC_API_KEY` | Your Lamatic API authentication key | Yes |
-| `LAMATIC_API_URL` | Lamatic GraphQL endpoint URL | Yes |
-| `LAMATIC_WORKFLOW_ID` | Workflow identifier for email generation | Yes |
-| `LAMATIC_PROJECT_ID` | Project identifier | Yes |
-| `PORT` | Backend server port | No (default: 3001) |
+| `VITE_LAMATIC_API_KEY` | Your Lamatic API authentication key | Yes |
+| `VITE_LAMATIC_API_URL` | Lamatic GraphQL endpoint URL | Yes |
+| `VITE_LAMATIC_WORKFLOW_ID` | Workflow identifier for email generation | Yes |
+| `VITE_LAMATIC_PROJECT_ID` | Project identifier | Yes |
+
+**Note**: The `VITE_` prefix is required for Vite to expose these variables to the frontend.
 
 ## CSV Format
 
@@ -102,8 +99,7 @@ Hannah,Sackett,hannah.sackett@neocol.com,Senior Director,Neocol,Technology
 ## Tech Stack
 
 - **Frontend**: React 18 + Vite
-- **Backend**: Node.js + Express
-- **AI Engine**: Lamatic API
+- **API**: Lamatic.ai (called directly from frontend)
 - **Styling**: Custom CSS with animations
 
 ## Project Structure
@@ -162,37 +158,29 @@ npm run preview
 
 ## Deployment
 
-### Environment Variables for Production
+### Simple Deployment (No Backend Needed!)
 
-When deploying, you need to set:
+The app calls Lamatic API directly from the frontend. Just deploy to Vercel/Netlify:
 
-**Backend** (Vercel/Render/Railway):
-```env
-LAMATIC_API_KEY=your_api_key
-LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
-LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
-LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
-PORT=3001
-```
-
-**Frontend** (Vercel/Netlify):
-```env
-VITE_API_URL=https://your-backend-url.vercel.app
-```
-
-### Quick Deploy
-
-**Option 1: Vercel (All-in-one)**
+**Vercel:**
 ```bash
 vercel --prod
-# Add environment variables in Vercel dashboard
 ```
 
-**Option 2: Separate Deployments**
-1. Deploy backend to Vercel/Render
-2. Deploy frontend to Vercel/Netlify with `VITE_API_URL` set
+**Netlify:**
+```bash
+netlify deploy --prod
+```
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+**Environment Variables to Set:**
+```env
+VITE_LAMATIC_API_KEY=your_api_key
+VITE_LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
+VITE_LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+VITE_LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
+```
+
+That's it! No separate backend deployment needed.
 
 ## Security
 

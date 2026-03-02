@@ -10,8 +10,11 @@ import Toast from './components/Toast'
 import FlowVisualization from './components/FlowVisualization'
 import './App.css'
 
-// API Configuration - use environment variable or fallback to localhost
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002'
+// Lamatic API Configuration - read from environment variables
+const LAMATIC_API_KEY = import.meta.env.VITE_LAMATIC_API_KEY
+const LAMATIC_API_URL = import.meta.env.VITE_LAMATIC_API_URL || 'https://sandbox566-flowforcontent246.lamatic.dev/graphql'
+const LAMATIC_WORKFLOW_ID = import.meta.env.VITE_LAMATIC_WORKFLOW_ID || '29897670-6e44-46a4-be97-ec7d133c71a5'
+const LAMATIC_PROJECT_ID = import.meta.env.VITE_LAMATIC_PROJECT_ID || '5ff16d78-7137-45b7-a320-a9e1f4c8d4bd'
 
 function App() {
   const [csvData, setCsvData] = useState(null)
@@ -159,7 +162,11 @@ function App() {
       const row = csvData[i]
 
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/generate-emails`, {
+        // Call Lamatic API directly
+        const query = `query ExecuteWorkflow($workflowId: String! $Qty: String $FirstName: String $LastName: String $Email: String $Title: String $Role: String $CompanyName: String $CompanyDomain: String $Industry: String $LinkedInProfile: String $DiscAnalysis: String) { executeWorkflow(workflowId: $workflowId payload: {Qty: $Qty FirstName: $FirstName LastName: $LastName Email: $Email Title: $Title Role: $Role CompanyName: $CompanyName CompanyDomain: $CompanyDomain Industry: $Industry LinkedInProfile: $LinkedInProfile DiscAnalysis: $DiscAnalysis}) { status result } }`
+
+        const variables = {
+          workflowId: LAMATIC_WORKFLOW_ID,
           Qty: row['Qty'] || row['qty'] || '',
           FirstName: row['First Name'] || row['FirstName'] || row['first_name'] || '',
           LastName: row['Last Name'] || row['LastName'] || row['last_name'] || '',
@@ -171,12 +178,24 @@ function App() {
           Industry: row['Industry'] || row['industry'] || '',
           LinkedInProfile: row['LinkedIn Profile'] || row['LinkedInProfile'] || row['linkedin'] || '',
           DiscAnalysis: row['Disc Analysis'] || row['DiscAnalysis'] || row['disc_analysis'] || ''
+        }
+
+        const response = await axios.post(LAMATIC_API_URL, {
+          query,
+          variables
+        }, {
+          headers: {
+            'Authorization': `Bearer ${LAMATIC_API_KEY}`,
+            'Content-Type': 'application/json',
+            'x-project-id': LAMATIC_PROJECT_ID
+          }
         })
 
-        if (response.data && response.data.result) {
-          const result = typeof response.data.result === 'string' 
-            ? JSON.parse(response.data.result) 
-            : response.data.result
+        if (response.data && response.data.data && response.data.data.executeWorkflow) {
+          const workflowResult = response.data.data.executeWorkflow
+          const result = typeof workflowResult.result === 'string' 
+            ? JSON.parse(workflowResult.result) 
+            : workflowResult.result
 
           const output = result.output || result
 
