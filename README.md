@@ -160,6 +160,40 @@ npm run build
 npm run preview
 ```
 
+## Deployment
+
+### Environment Variables for Production
+
+When deploying, you need to set:
+
+**Backend** (Vercel/Render/Railway):
+```env
+LAMATIC_API_KEY=your_api_key
+LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
+LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
+PORT=3001
+```
+
+**Frontend** (Vercel/Netlify):
+```env
+VITE_API_URL=https://your-backend-url.vercel.app
+```
+
+### Quick Deploy
+
+**Option 1: Vercel (All-in-one)**
+```bash
+vercel --prod
+# Add environment variables in Vercel dashboard
+```
+
+**Option 2: Separate Deployments**
+1. Deploy backend to Vercel/Render
+2. Deploy frontend to Vercel/Netlify with `VITE_API_URL` set
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
 ## Security
 
 - API keys stored in `.env` (gitignored)

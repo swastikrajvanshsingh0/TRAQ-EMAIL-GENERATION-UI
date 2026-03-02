@@ -1,0 +1,19 @@
+# Vercel Configuration for Backend API
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

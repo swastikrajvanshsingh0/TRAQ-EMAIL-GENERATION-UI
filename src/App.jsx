@@ -10,6 +10,9 @@ import Toast from './components/Toast'
 import FlowVisualization from './components/FlowVisualization'
 import './App.css'
 
+// API Configuration - use environment variable or fallback to localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002'
+
 function App() {
   const [csvData, setCsvData] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -156,7 +159,7 @@ function App() {
       const row = csvData[i]
 
       try {
-        const response = await axios.post('http://localhost:3001/api/generate-emails', {
+        const response = await axios.post(`${API_BASE_URL}/api/generate-emails`, {
           Qty: row['Qty'] || row['qty'] || '',
           FirstName: row['First Name'] || row['FirstName'] || row['first_name'] || '',
           LastName: row['Last Name'] || row['LastName'] || row['last_name'] || '',
