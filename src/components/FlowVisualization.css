@@ -1,0 +1,254 @@
+/* ===== Overlay ===== */
+.flow-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fo-fadeIn 0.25s ease;
+}
+@keyframes fo-fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.flow-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+
+/* ===== Modal ===== */
+.flow-modal {
+  position: relative;
+  width: 740px;
+  max-width: 94vw;
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.07);
+  animation: fo-slideUp 0.35s cubic-bezier(0.16,1,0.3,1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+@keyframes fo-slideUp {
+  from { transform: translateY(24px); opacity: 0 }
+  to   { transform: translateY(0); opacity: 1 }
+}
+
+/* ===== Header ===== */
+.flow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.flow-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0 0 0.1rem 0;
+  color: #0f172a;
+}
+.flow-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+.flow-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.8rem;
+  background: rgba(59,130,246,0.08);
+  border-radius: 999px;
+  border: 1px solid rgba(59,130,246,0.18);
+}
+.flow-spinner {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(59,130,246,0.2);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: fo-spin 0.7s linear infinite;
+}
+@keyframes fo-spin { to { transform: rotate(360deg) } }
+.flow-badge span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+/* ===== Canvas ===== */
+.flow-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 700 / 410;
+  overflow: hidden;
+}
+.flow-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== Lines ===== */
+.conn-bg {
+  fill: none;
+  stroke: #e2e8f0;
+  stroke-width: 1.5;
+}
+.conn-active {
+  fill: none;
+  stroke: url(#lineGrad);
+  stroke-width: 2;
+  animation: fo-draw 0.5s ease forwards;
+}
+@keyframes fo-draw { to { stroke-dashoffset: 0 } }
+
+.conn-dot {
+  fill: #3b82f6;
+  filter: drop-shadow(0 0 3px rgba(59,130,246,0.6));
+}
+
+/* ===== Nodes ===== */
+.flow-nodes {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.fnode {
+  position: absolute;
+  transform: translate(-50%, 0);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  background: rgba(255,255,255,0.92);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.6);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.25s, box-shadow 0.25s;
+  pointer-events: none;
+}
+.fnode.sm {
+  padding: 0.3rem 0.55rem;
+  gap: 0.25rem;
+}
+.fnode.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  pointer-events: auto;
+}
+.fnode.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12), 0 2px 12px rgba(59,130,246,0.15);
+}
+.fnode.done {
+  border-color: #22c55e;
+}
+
+.fnode-icon {
+  font-size: 0.82rem;
+  line-height: 1;
+}
+.fnode.sm .fnode-icon {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #3b82f6;
+}
+.fnode-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+}
+.fnode.sm .fnode-label {
+  font-size: 0.65rem;
+}
+
+.fnode-check {
+  width: 14px;
+  height: 14px;
+  background: #22c55e;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.5rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.15rem;
+  animation: fo-pop 0.25s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes fo-pop { from { transform: scale(0) } to { transform: scale(1) } }
+
+.fnode-bar-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(59,130,246,0.08);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+}
+.fnode-bar {
+  height: 100%;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+  animation: fo-slide 1s ease-in-out infinite;
+}
+@keyframes fo-slide {
+  0%   { transform: translateX(-100%) }
+  100% { transform: translateX(380%) }
+}
+
+/* ===== Footer ===== */
+.flow-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+.flow-stage-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+}
+.flow-bolt { font-size: 0.85rem; }
+.flow-eta {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .flow-modal { width: 97vw; }
+  .flow-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+  }
+  .flow-footer {
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-start;
+    padding: 0.65rem 1rem;
+  }
+}

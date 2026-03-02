@@ -1,0 +1,74 @@
+.file-upload-section {
+  margin-bottom: 1.5rem;
+}
+
+.file-upload-area {
+  background: white;
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.file-upload-area:hover {
+  border-color: var(--color-primary);
+  background: rgba(77, 57, 255, 0.02);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.85rem;
+  filter: grayscale(20%);
+}
+
+.file-upload-area h3 {
+  font-size: 1.15rem;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+}
+
+.file-upload-area > p {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.file-requirements {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
+}
+
+.file-requirements p {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .file-upload-area {
+    padding: 1.5rem 1rem;
+  }
+
+  .upload-icon {
+    font-size: 2rem;
+  }
+
+  .file-upload-area h3 {
+    font-size: 1rem;
+  }
+
+  .file-requirements p {
+    font-size: 0.75rem;
+  }
+}

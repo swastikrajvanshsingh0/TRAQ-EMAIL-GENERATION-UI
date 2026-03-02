@@ -1,0 +1,341 @@
+.email-display-section {
+  margin-top: 2.5rem;
+}
+
+/* ===== Results Header ===== */
+.results-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.results-header h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.4rem 0;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.results-subtitle {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ===== Prospect Selector ===== */
+.prospect-selector {
+  background: white;
+  padding: 0.85rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.prospect-selector label {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 0.85rem;
+}
+
+.prospect-selector select {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.55rem 0.85rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.prospect-selector select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+}
+
+/* ===== Prospect Card ===== */
+.prospect-card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.prospect-card-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.prospect-card-header:hover {
+  background: rgba(0,0,0,0.015);
+}
+
+.prospect-identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.prospect-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0 0 0.15rem 0;
+}
+
+.prospect-role {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toggle-btn:hover {
+  background: rgba(0,0,0,0.05);
+  color: #64748b;
+}
+
+/* ===== Prospect Detail Grid ===== */
+.prospect-detail-grid {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 2rem;
+}
+
+.prospect-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.prospect-detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-key {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-val {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.detail-val.disc-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59,130,246,0.08);
+  color: #3b82f6;
+  font-weight: 700;
+  padding: 0.15rem 0.6rem;
+  border-radius: 6px;
+  width: fit-content;
+  font-size: 0.82rem;
+}
+
+/* ===== Email Grid ===== */
+.emails-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1rem;
+}
+
+.email-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid var(--color-border);
+  transition: box-shadow 0.2s;
+}
+
+.email-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.email-card-header {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: white;
+  padding: 0.75rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.email-variant-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.variant-num {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.variant-type {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  font-weight: 500;
+  background: rgba(255,255,255,0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.copy-btn {
+  background: rgba(255,255,255,0.18);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: background 0.15s;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.28);
+}
+
+.copy-btn.copied {
+  background: rgba(34,197,94,0.85);
+  border-color: rgba(34,197,94,1);
+}
+
+/* ===== Email Content ===== */
+.email-content {
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.email-subject-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.subject-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.subject-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.email-body {
+  background: var(--color-surface-2);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.email-body pre {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+}
+
+/* ===== Error ===== */
+.error-result {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+.error-result h3 {
+  color: #dc2626;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.error-result p {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .emails-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prospect-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .prospect-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .email-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .copy-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
