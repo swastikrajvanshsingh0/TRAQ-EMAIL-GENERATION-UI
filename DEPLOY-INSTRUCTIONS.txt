@@ -1,34 +1,62 @@
-# Deployment Instructions
+# ✅ Simple Deployment Instructions
 
-## The Problem
-Your frontend calls `localhost:3001` which doesn't exist in production.
+## No Backend Needed!
 
-## The Solution
-Set environment variable `VITE_API_URL` to your backend URL.
+Your app now calls Lamatic API directly from the frontend. Just deploy the frontend!
 
-## Quick Fix for Vercel/Netlify
+## Deploy to Vercel (Recommended)
 
-### Step 1: Deploy Backend
-Deploy your backend separately (Vercel, Render, Railway) with these env vars:
-- `LAMATIC_API_KEY`
-- `LAMATIC_API_URL`
-- `LAMATIC_WORKFLOW_ID`
-- `LAMATIC_PROJECT_ID`
-
-### Step 2: Configure Frontend
-In your frontend deployment (Vercel/Netlify), add:
+### Step 1: Deploy
+```bash
+cd "/Users/swastikrajvanshsingh/Downloads/TRAQ.ai demo"
+vercel --prod
 ```
-VITE_API_URL=https://your-backend-url.com
+
+### Step 2: Add Environment Variables
+
+In Vercel dashboard → Project Settings → Environment Variables, add:
+
+```
+VITE_LAMATIC_API_KEY=lt-bc76b2cfc39b4fbd0a7ddc21ae1d22a0
+VITE_LAMATIC_API_URL=https://sandbox566-flowforcontent246.lamatic.dev/graphql
+VITE_LAMATIC_WORKFLOW_ID=29897670-6e44-46a4-be97-ec7d133c71a5
+VITE_LAMATIC_PROJECT_ID=5ff16d78-7137-45b7-a320-a9e1f4c8d4bd
 ```
 
 ### Step 3: Redeploy
-Redeploy your frontend after adding the environment variable.
 
-## Example for Vercel
+Click "Redeploy" in Vercel or run:
+```bash
+vercel --prod
+```
 
-1. Deploy backend: `vercel --prod` (in backend folder)
-2. Get URL: `https://traq-backend.vercel.app`
-3. Add to frontend env: `VITE_API_URL=https://traq-backend.vercel.app`
-4. Redeploy frontend
+## Deploy to Netlify
 
-Your app will now work in production! 🚀
+### Step 1: Deploy
+```bash
+netlify deploy --prod
+```
+
+### Step 2: Add Environment Variables
+
+In Netlify dashboard → Site Settings → Environment Variables, add the same 4 variables above.
+
+### Step 3: Redeploy
+
+Trigger a new deployment in Netlify dashboard.
+
+## That's It! 🎉
+
+Your app will work perfectly now. The frontend calls Lamatic API directly - no backend server needed!
+
+## Troubleshooting
+
+**Build fails?**
+- Make sure you're deploying from the latest commit
+- Check that all 4 environment variables are set
+- Redeploy after adding variables
+
+**API not working?**
+- Verify environment variables are correct
+- Check they all start with `VITE_` prefix
+- Redeploy after changes
