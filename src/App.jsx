@@ -1,28 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import Papa from 'papaparse'
-import axios from 'axios'
 import FileUpload from './components/FileUpload'
 import DataPreview from './components/DataPreview'
 import EmailDisplay from './components/EmailDisplay'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Toast from './components/Toast'
-import FlowVisualization from './components/FlowVisualization'
+import ProcessingScreen from './components/ProcessingScreen'
 import './App.css'
 
-// Lamatic API Configuration - read from environment variables
 const LAMATIC_API_KEY = import.meta.env.VITE_LAMATIC_API_KEY
-const LAMATIC_API_URL = import.meta.env.VITE_LAMATIC_API_URL || 'https://sandbox566-flowforcontent246.lamatic.dev/graphql'
-const LAMATIC_WORKFLOW_ID = import.meta.env.VITE_LAMATIC_WORKFLOW_ID || '29897670-6e44-46a4-be97-ec7d133c71a5'
-const LAMATIC_PROJECT_ID = import.meta.env.VITE_LAMATIC_PROJECT_ID || '5ff16d78-7137-45b7-a320-a9e1f4c8d4bd'
+const LAMATIC_API_URL = import.meta.env.VITE_LAMATIC_API_URL
+const LAMATIC_WORKFLOW_ID = import.meta.env.VITE_LAMATIC_WORKFLOW_ID
+const LAMATIC_PROJECT_ID = import.meta.env.VITE_LAMATIC_PROJECT_ID
 
 function App() {
   const [csvData, setCsvData] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [generatedEmails, setGeneratedEmails] = useState([])
-  const [currentRowIndex, setCurrentRowIndex] = useState(0)
+  const [completedCount, setCompletedCount] = useState(0)
   const [error, setError] = useState(null)
   const [toast, setToast] = useState(null)
+  const abortControllerRef = useRef(null)
 
   const REQUIRED_COLUMNS = [
     'First Name', 'FirstName', 'first_name',
@@ -123,17 +122,53 @@ function App() {
     })
   }
 
-  const formatEmailBody = (body) => {
+  const formatEmailBody = useCallback((body) => {
     if (!body) return body
-    
-    // Replace ||| with line breaks
     let formatted = body.replace(/\|\|\|/g, '\n\n')
-    
-    // Clean up excessive newlines
     formatted = formatted.replace(/\n{3,}/g, '\n\n').trim()
-    
     return formatted
-  }
+  }, [])
+
+  const GRAPHQL_QUERY = `query ExecuteWorkflow($workflowId: String! $Qty: String $FirstName: String $LastName: String $Email: String $Title: String $Role: String $CompanyName: String $CompanyDomain: String $Industry: String $LinkedInProfile: String $DiscAnalysis: String) { executeWorkflow(workflowId: $workflowId payload: {Qty: $Qty FirstName: $FirstName LastName: $LastName Email: $Email Title: $Title Role: $Role CompanyName: $CompanyName CompanyDomain: $CompanyDomain Industry: $Industry LinkedInProfile: $LinkedInProfile DiscAnalysis: $DiscAnalysis}) { status result } }`
+
+  const buildVariables = useCallback((row) => ({
+    workflowId: LAMATIC_WORKFLOW_ID,
+    Qty: row['Qty'] || row['qty'] || '',
+    FirstName: row['First Name'] || row['FirstName'] || row['first_name'] || '',
+    LastName: row['Last Name'] || row['LastName'] || row['last_name'] || '',
+    Email: row['Email'] || row['email'] || '',
+    Title: row['Title'] || row['title'] || '',
+    Role: row['Role'] || row['role'] || '',
+    CompanyName: row['Company Name'] || row['CompanyName'] || row['company'] || '',
+    CompanyDomain: row['Company Domain'] || row['CompanyDomain'] || row['domain'] || '',
+    Industry: row['Industry'] || row['industry'] || '',
+    LinkedInProfile: row['LinkedIn Profile'] || row['LinkedInProfile'] || row['linkedin'] || '',
+    DiscAnalysis: row['Disc Analysis'] || row['DiscAnalysis'] || row['disc_analysis'] || ''
+  }), [])
+
+  const parseRowResult = useCallback((data, row, index) => {
+    const workflowResult = data.data.executeWorkflow
+    const result = typeof workflowResult.result === 'string'
+      ? JSON.parse(workflowResult.result)
+      : workflowResult.result
+
+    const output = result.output || result
+    const emails = []
+
+    for (let j = 1; j <= 6; j++) {
+      const emailKey = `email_${j}`
+      if (output.content?.[`${emailKey}_subject`]) {
+        emails.push({
+          variant: j,
+          subject: output.content[`${emailKey}_subject`].replace(/\n/g, ' ').trim(),
+          body: formatEmailBody(output.content[`${emailKey}_body`]),
+          approach: ['Competitor Intel', 'Industry Stat', 'Methodology Gap', 'DISC Tailored', 'Tool Gap Wedge', 'Scale + Value'][j - 1]
+        })
+      }
+    }
+
+    return { rowIndex: index, rowData: row, profile: output.profile || {}, emails, success: true }
+  }, [formatEmailBody])
 
   const generateEmails = async () => {
     if (!csvData || csvData.length === 0) {
@@ -143,102 +178,78 @@ function App() {
 
     const validation = validateCSVColumns(csvData)
     if (!validation.valid) {
-      showToast(
-        `Cannot proceed. Missing required columns: ${validation.missing.join(', ')}`,
-        'error'
-      )
+      showToast(`Cannot proceed. Missing required columns: ${validation.missing.join(', ')}`, 'error')
       return
     }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    const controller = new AbortController()
+    abortControllerRef.current = controller
 
     setIsProcessing(true)
     setError(null)
     setGeneratedEmails([])
-    setCurrentRowIndex(0)
+    setCompletedCount(0)
 
-    const results = []
+    const requestBodies = csvData.map(row =>
+      JSON.stringify({ query: GRAPHQL_QUERY, variables: buildVariables(row) })
+    )
 
-    for (let i = 0; i < csvData.length; i++) {
-      setCurrentRowIndex(i + 1)
-      const row = csvData[i]
-
-      try {
-        // Call Lamatic API directly
-        const query = `query ExecuteWorkflow($workflowId: String! $Qty: String $FirstName: String $LastName: String $Email: String $Title: String $Role: String $CompanyName: String $CompanyDomain: String $Industry: String $LinkedInProfile: String $DiscAnalysis: String) { executeWorkflow(workflowId: $workflowId payload: {Qty: $Qty FirstName: $FirstName LastName: $LastName Email: $Email Title: $Title Role: $Role CompanyName: $CompanyName CompanyDomain: $CompanyDomain Industry: $Industry LinkedInProfile: $LinkedInProfile DiscAnalysis: $DiscAnalysis}) { status result } }`
-
-        const variables = {
-          workflowId: LAMATIC_WORKFLOW_ID,
-          Qty: row['Qty'] || row['qty'] || '',
-          FirstName: row['First Name'] || row['FirstName'] || row['first_name'] || '',
-          LastName: row['Last Name'] || row['LastName'] || row['last_name'] || '',
-          Email: row['Email'] || row['email'] || '',
-          Title: row['Title'] || row['title'] || '',
-          Role: row['Role'] || row['role'] || '',
-          CompanyName: row['Company Name'] || row['CompanyName'] || row['company'] || '',
-          CompanyDomain: row['Company Domain'] || row['CompanyDomain'] || row['domain'] || '',
-          Industry: row['Industry'] || row['industry'] || '',
-          LinkedInProfile: row['LinkedIn Profile'] || row['LinkedInProfile'] || row['linkedin'] || '',
-          DiscAnalysis: row['Disc Analysis'] || row['DiscAnalysis'] || row['disc_analysis'] || ''
-        }
-
-        const response = await axios.post(LAMATIC_API_URL, {
-          query,
-          variables
-        }, {
-          headers: {
-            'Authorization': `Bearer ${LAMATIC_API_KEY}`,
-            'Content-Type': 'application/json',
-            'x-project-id': LAMATIC_PROJECT_ID
-          }
-        })
-
-        if (response.data && response.data.data && response.data.data.executeWorkflow) {
-          const workflowResult = response.data.data.executeWorkflow
-          const result = typeof workflowResult.result === 'string' 
-            ? JSON.parse(workflowResult.result) 
-            : workflowResult.result
-
-          const output = result.output || result
-
-          const emails = []
-          for (let j = 1; j <= 6; j++) {
-            const emailKey = `email_${j}`
-            if (output.content && output.content[`${emailKey}_subject`]) {
-              const subject = output.content[`${emailKey}_subject`].replace(/\n/g, ' ').trim()
-              emails.push({
-                variant: j,
-                subject: subject,
-                body: formatEmailBody(output.content[`${emailKey}_body`]),
-                approach: ['Competitor Intel', 'Industry Stat', 'Methodology Gap', 'DISC Tailored', 'Tool Gap Wedge', 'Scale + Value'][j - 1]
-              })
-            }
-          }
-
-          results.push({
-            rowIndex: i,
-            rowData: row,
-            profile: output.profile || {},
-            emails: emails,
-            success: true
-          })
-        }
-      } catch (err) {
-        console.error(`Error processing row ${i + 1}:`, err)
-        results.push({
-          rowIndex: i,
-          rowData: row,
-          emails: [],
-          success: false,
-          error: err.response?.data?.error || err.message || 'Unknown error'
-        })
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 1000))
+    const headers = {
+      'Authorization': `Bearer ${LAMATIC_API_KEY}`,
+      'Content-Type': 'application/json',
+      'x-project-id': LAMATIC_PROJECT_ID
     }
+
+    console.log(`[TRAQ] Firing ${requestBodies.length} requests in parallel at ${new Date().toISOString()}`)
+
+    const promises = requestBodies.map((body, index) => {
+      console.log(`[TRAQ] Row ${index + 1} request dispatched at ${new Date().toISOString()}`)
+      return fetch(LAMATIC_API_URL, {
+        method: 'POST',
+        headers,
+        body,
+        signal: controller.signal
+      })
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          return res.json()
+        })
+        .then(data => {
+          console.log(`[TRAQ] Row ${index + 1} completed at ${new Date().toISOString()}`)
+          if (data?.data?.executeWorkflow) {
+            const result = parseRowResult(data, csvData[index], index)
+            setCompletedCount(prev => prev + 1)
+            return result
+          }
+          throw new Error('Invalid API response')
+        })
+        .catch(err => {
+          if (err.name === 'AbortError') return null
+          console.error(`[TRAQ] Row ${index + 1} failed:`, err.message)
+          setCompletedCount(prev => prev + 1)
+          return {
+            rowIndex: index,
+            rowData: csvData[index],
+            emails: [],
+            success: false,
+            error: err.message || 'Unknown error'
+          }
+        })
+    })
+
+    const settled = await Promise.all(promises)
+    const results = settled.filter(Boolean).sort((a, b) => a.rowIndex - b.rowIndex)
 
     setGeneratedEmails(results)
     setIsProcessing(false)
-    setCurrentRowIndex(0)
-    showToast(`Successfully generated emails for ${results.filter(r => r.success).length} prospects`, 'success')
+    setCompletedCount(0)
+    abortControllerRef.current = null
+
+    const successCount = results.filter(r => r.success).length
+    showToast(`Generated emails for ${successCount} of ${csvData.length} prospects`, successCount > 0 ? 'success' : 'error')
   }
 
   return (
@@ -280,13 +291,12 @@ function App() {
                 data={csvData} 
                 onGenerate={generateEmails}
                 isProcessing={isProcessing}
-                currentRow={currentRowIndex}
               />
 
-              <FlowVisualization 
+              <ProcessingScreen 
                 isProcessing={isProcessing}
                 totalRows={csvData.length}
-                currentRow={currentRowIndex}
+                completedCount={completedCount}
               />
 
               {generatedEmails.length > 0 && !isProcessing && (

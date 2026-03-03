@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './DataPreview.css'
 
-const DataPreview = ({ data, onGenerate, isProcessing, currentRow }) => {
+const DataPreview = ({ data, onGenerate, isProcessing }) => {
   const [showAll, setShowAll] = useState(false)
   const displayData = showAll ? data : data.slice(0, 5)
 
@@ -29,7 +29,7 @@ const DataPreview = ({ data, onGenerate, isProcessing, currentRow }) => {
             {isProcessing ? (
               <>
                 <span className="spinner"></span>
-                Processing {currentRow}/{data.length}...
+                Processing {data.length} rows...
               </>
             ) : (
               <>
